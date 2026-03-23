@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Nutri-Lens</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h1 { color: #2ecc71; text-align: center; }
+        .upload-section { border: 2px dashed #2ecc71; padding: 40px; text-align: center; border-radius: 10px; cursor: pointer; transition: 0.3s; }
+        .upload-section:hover { background: #e8f8f0; }
+        #preview { max-width: 100%; margin-top: 20px; border-radius: 8px; display: none; }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        button { flex: 1; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; transition: 0.3s; }
+        .btn-gpt { background-color: #74aa9c; }
+        .btn-gemini { background-color: #4285f4; }
+        button:hover { opacity: 0.8; }
+        #results { margin-top: 30px; padding: 20px; border-radius: 8px; background: #fafafa; border-left: 5px solid #2ecc71; display: none; }
+        .loader { display: none; text-align: center; margin: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>AI Nutri-Lens</h1>
+    <p style="text-align: center;">Upload a photo of your meal to see its nutritional breakdown.</p>
+
+    <div class="upload-section" onclick="document.getElementById('imageInput').click()">
+        <span>Click to Take Photo or Upload from Gallery</span>
+        <input type="file" id="imageInput" accept="image/*" hidden onchange="previewImage(event)">
+        <img id="preview" src="" alt="Food Preview">
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-gpt" onclick="analyzeFood('ChatGPT')">Analyze with ChatGPT</button>
+        <button class="btn-gemini" onclick="analyzeFood('Gemini')">Analyze with Gemini</button>
+    </div>
+
+    <div class="loader" id="loader">Processing nutritional data...</div>
+
+    <div id="results">
+        <h3>Nutrition Analysis</h3>
+        <div id="analysisText"></div>
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        const preview = document.getElementById('preview');
+        preview.src = URL.createObjectURL(event.target.files[0]);
+        preview.style.display = 'block';
+    }
+
+    async function analyzeFood(model) {
+        const resultsDiv = document.getElementById('results');
+        const analysisText = document.getElementById('analysisText');
+        const loader = document.getElementById('loader');
+
+        loader.style.display = 'block';
+        resultsDiv.style.display = 'none';
+
+        // NOTE: In a real app, you would send the image to your BACKEND here.
+        // For this demo, we are simulating the AI's logic.
+        
+        setTimeout(() => {
+            loader.style.display = 'none';
+            resultsDiv.style.display = 'block';
+            
+            analysisText.innerHTML = `
+                <p><strong>Model Used:</strong> ${model}</p>
+                <p><strong>Detected Food:</strong> Grilled Chicken Salad with Avocado</p>
+                <ul>
+                    <li>Calories: ~450 kcal</li>
+                    <li>Protein: 35g</li>
+                    <li>Healthy Fats: 22g</li>
+                    <li>Carbs: 12g</li>
+                </ul>
+                <hr>
+                <p><strong>Recommendation:</strong> This is a high-nutrient meal. You can eat <strong>higher quantities</strong> of the leafy greens and chicken. However, consume the avocado in <strong>moderate/lower quantities</strong> due to its high caloric density, despite being healthy.</p>
+            `;
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
